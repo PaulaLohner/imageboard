@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+    <title>IMAGEBOARD</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@700&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        
+        <h1>i<h1 style="color:white ">meow</h1></h1><h1>geboard</h1>
+        <img src="cat.png" alt="cat icon" class="cat-icon">
+
+    </header>
+
+    <div id="main">
+
+
+        <form class="upload">
+            <input v-model='title' type="text" name="title" placeholder="title">
+            <input v-model='description' type="text" name="description" placeholder="description">
+            <input v-model='username' type="text" name="username" placeholder="username">
+            <input @change="handleChange" type="file" name="file" accept="image/*" class="file">
+            <button @click='handleClick'>submit</button>
+            <!-- <button v-on:click='handleClick'>submit</button>
+            another way of handling the click -->
+        </form>
+
+        <!-- <p class="fruits" v-for="fruit in fruits" @click="selectedFruit = fruit.id">{{fruit.title}}</p> -->
+
+        <first-component 
+            v-if="selectedImage" 
+            :id="selectedImage" 
+            @close="closeModal">
+        </first-component>
+        <!-- if we want to reuse this component we can just insert it anywhere in the page: -->
+        <!-- <first-component ></first-component>> -->
+        <!-- we use : instead of v-bind and we use it to reference to the id of the selectedFruit element in Vue main instance -->
+
+        <div class="image-container">
+
+            <div v-for="image in images" class="image-border">
+                <a :href="'#' + image.id">
+                    <img :src="image.url" alt="image">
+                    <p>{{image.title}}</p>
+                </a>
+            </div>
+
+        </div>
+
+        <button class="more" v-if="seen" @click="getMoreImages">MORE</button>
+
+
+    </div>
+
+    <script type="text/x-template" id="template">
+        <!-- it is very important that we only return ONE element from the script tag!!! -->
+        <!-- so everything needs to live inside this one div: -->
+        <div class="component">
+
+            <div class="modal">
+
+                <div class="modal-content">
+
+
+                    <div class="modal-image">
+                        <h4>{{image.title}}</h4>
+                        <p>posted by: {{image.username}}</p>
+                        <img :src="image.url" alt="image">
+                        <p>{{image.description}}</p>
+                    </div>
+
+                    <div class="comments-container">
+
+                        <h3>add a comment:</h3>
+
+                        <form method="POST" class="post-comment">
+
+                            <input v-model="username" type="text" name="username" placeholder="username">
+                            <input v-model="comment" type="text" name="comment" placeholder="comment">
+                            <button @click="addComment">submit</button>
+
+                        </form>
+
+                        <div v-if="getComments.length > 0" class="comments">
+                            <!-- <h3>comments</h3> -->
+                                <div class="comment" v-for="comment in getComments">
+                                    <h5>{{comment.comment}}</h5>
+                                    <p>{{comment.username}} on {{ comment.created_at }}</p>
+                                </div>
+                        </div>
+
+                    </div>
+
+                    <p @click="closeModal" class="close">X</p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- <button @click="count++">Click me!</button> <p>Count: {{count}}</p>  -->
+        </div>
+
+    </script>
+
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/script.js"></script> 
+    <!-- script.js must be linked after the frameworks! -->
+</body>
+</html>
